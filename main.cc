@@ -198,8 +198,8 @@ int main(int argc, char** argv) {
 
   /* extracting median, error on median, position from files */
 
-  QString filepath = ("/home/dami/master/opticalCon/4TSAACFIM00127/noMirror/");
-  QStringList files = QDir(filepath).entryList(QStringList() << "*AZ*.root");
+  QString filepath = ("/home/iwanicki/sw/opticalCon/data/4TSAACFIM00387/noMirror/"); // TODO GET DATA AND SET PATHES
+  QStringList files = QDir(filepath).entryList(QStringList() << "*.root");
   const int nFiles = files.count();
   qDebug() << endl << "using" << nFiles << " files.. ";
 
@@ -236,7 +236,7 @@ int main(int argc, char** argv) {
   }
 
   /* serial measurements implementation for reference */
-
+  /*
   Double_t* serialPos = new Double_t[4];
   serialPos[0]=218.6; serialPos[1]=138.45; serialPos[2]=77.; serialPos[3]=16.25;
 
@@ -263,8 +263,11 @@ int main(int argc, char** argv) {
 
     count++;
   }
+  */
 
-  files = QDir(filepath).entryList(QStringList() << "4TSAAC*.root");
+  /*
+  filepath = ("/home/dami/master/opticalCon/data/4TSAACFIM00387/serial_old/noMirror/");
+  files = QDir(filepath).entryList(QStringList() << "*.root");
   nSerial = files.count();
   qDebug() << endl << "using" << nSerial << "serial(old) QA files.. ";
 
@@ -288,26 +291,28 @@ int main(int argc, char** argv) {
 
     count++;
   }
+  */
 
   /* draw and fit */
 
   TCanvas* c1 = new TCanvas("c1", "c1");
   c1->cd();
   TGraphErrors* g1 = new TGraphErrors(nFiles, position, mean, positionError, meanError);
-  TGraphErrors* g1old = new TGraphErrors(4, serialPos, oldSerialMean, positionError, oldSerialMeanError);
-  TGraphErrors* g1new = new TGraphErrors(4, serialPos, newSerialMean, positionError, newSerialMeanError);
+  //TGraphErrors* g1old = new TGraphErrors(4, serialPos, oldSerialMean, positionError, oldSerialMeanError);
+  //TGraphErrors* g1new = new TGraphErrors(4, serialPos, newSerialMean, positionError, newSerialMeanError);
   g1->SetTitle("Mean light yield");
   g1->GetXaxis()->SetTitle("distance to SiPM [cm]");
-  g1->GetXaxis()->SetTitleOffset(1.25);
-  g1->GetXaxis()->SetTitleSize(20);
-  g1->GetXaxis()->SetLabelSize(20);
-  g1->GetYaxis()->SetTitleOffset(1.15);
-  g1->GetYaxis()->SetTitleSize(20);
-  g1->GetYaxis()->SetLabelSize(20);
+  g1->GetXaxis()->SetTitleOffset(1.0);
+  g1->GetXaxis()->SetTitleSize(35);
+  g1->GetXaxis()->SetLabelSize(30);
+  g1->GetYaxis()->SetTitleOffset(0.9);
+  g1->GetYaxis()->SetTitleSize(35);
+  g1->GetYaxis()->SetLabelSize(30);
   g1->GetYaxis()->SetTitle("mean channel signal value [pixel]");
   g1->GetYaxis()->SetRangeUser(10.,26.);
   g1->GetXaxis()->SetLimits(0.,230.);
   g1->Draw("ape");
+  /*
   g1old->SetMarkerStyle(22);
   g1old->SetMarkerSize(1.5);
   g1old->SetMarkerColor(kBlue);
@@ -316,11 +321,12 @@ int main(int argc, char** argv) {
   g1new->SetMarkerSize(1.5);
   g1new->SetMarkerColor(kGreen);
   g1new->Draw("same p");
+  */
 
   TLegend* l1 = new TLegend(.12,.15,.4,.33);
-  l1->AddEntry(g1 ,"moveable PMT 2017-nov", "pe");
-  l1->AddEntry(g1new ,"Serial PMTs 2017-nov", "p");
-  l1->AddEntry(g1old ,"Serial PMTs 2017-jan", "p");
+  l1->AddEntry(g1 ,"moveable PMT 2018-feb", "pe");
+  //l1->AddEntry(g1new ,"Serial PMTs 2017-nov", "p");
+  //l1->AddEntry(g1old ,"Serial PMTs 2017-jan", "p");
   l1->Draw("SAME");
 
   //TF1* expFitMean = doubleExpFit(g1);
@@ -332,20 +338,21 @@ int main(int argc, char** argv) {
   TCanvas* c2 = new TCanvas("c2", "c2");
   c2->cd();
   TGraphErrors* g2 = new TGraphErrors(nFiles, position, median, positionError, medianError);
-  TGraphErrors* g2old = new TGraphErrors(4, serialPos, oldSerialMedian, positionError, oldSerialMedianError);
-  TGraphErrors* g2new = new TGraphErrors(4, serialPos, newSerialMedian, positionError, newSerialMedianError);
+  //TGraphErrors* g2old = new TGraphErrors(4, serialPos, oldSerialMedian, positionError, oldSerialMedianError);
+  //TGraphErrors* g2new = new TGraphErrors(4, serialPos, newSerialMedian, positionError, newSerialMedianError);
   g2->SetTitle("Median light yield");
   g2->GetXaxis()->SetTitle("distance to SiPM [cm]");
-  g2->GetXaxis()->SetTitleOffset(1.15);
-  g2->GetXaxis()->SetTitleSize(20);
-  g2->GetXaxis()->SetLabelSize(20);
-  g2->GetYaxis()->SetTitleOffset(1.25);
-  g2->GetYaxis()->SetTitleSize(20);
-  g2->GetYaxis()->SetLabelSize(20);
+  g2->GetXaxis()->SetTitleOffset(1.0);
+  g2->GetXaxis()->SetTitleSize(35);
+  g2->GetXaxis()->SetLabelSize(30);
+  g2->GetYaxis()->SetTitleOffset(0.9);
+  g2->GetYaxis()->SetTitleSize(35);
+  g2->GetYaxis()->SetLabelSize(30);
   g2->GetYaxis()->SetTitle("median channel signal value [pixel]");
   g2->GetYaxis()->SetRangeUser(10., 26.);
   g2->GetXaxis()->SetLimits(0., 230.);
   g2->Draw("ape");
+  /*
   g2old->SetMarkerStyle(22);
   g2old->SetMarkerColor(kBlue);
   g2old->SetMarkerSize(1.5);
@@ -354,11 +361,12 @@ int main(int argc, char** argv) {
   g2new->SetMarkerColor(kGreen);
   g2new->SetMarkerSize(1.5);
   g2new->Draw("same p");
+  */
 
   TLegend* l2 = new TLegend(.12,.15,.4,.33);
-  l2->AddEntry(g1 ,"moveable PMT 2017-nov", "pe");
-  l2->AddEntry(g1new ,"Serial PMTs 2017-nov", "p");
-  l2->AddEntry(g1old ,"Serial PMTs 2017-jan", "p");
+  l2->AddEntry(g1 ,"moveable PMT 2018-feb", "pe");
+  //l2->AddEntry(g1new ,"Serial PMTs 2017-nov", "p");
+  //l2->AddEntry(g1old ,"Serial PMTs 2017-jan", "p");
   l2->Draw("SAME");
 
   //TF1* expFitMedian = doubleExpFit(g2);
@@ -379,6 +387,7 @@ int main(int argc, char** argv) {
     medianError[i] = TMath::Sqrt(medianError[i]*medianError[i]+ posERR_median*posERR_median);
   }
 
+  /*
   for (int i=0; i<4; ++i) {
     double posERR_mean = TMath::Abs( expFitMean->Eval(serialPos[i]-positionError[i]) - expFitMean->Eval(serialPos[i]+positionError[i]))/2.;
     double posERR_median = TMath::Abs( expFitMedian->Eval(serialPos[i]-positionError[i]) - expFitMedian->Eval(serialPos[i]+positionError[i]))/2.;
@@ -393,20 +402,28 @@ int main(int argc, char** argv) {
     oldSerialMeanError[i] = TMath::Sqrt(meanError[i]*meanError[i]+ posERR_mean*posERR_mean);
     oldSerialMedianError[i] = TMath::Sqrt(medianError[i]*medianError[i]+ posERR_median*posERR_median);
   }
+  */
 
   TCanvas* c3 = new TCanvas("c3", "c3");
   c3->cd();
   TGraphErrors* g1Res = new TGraphErrors(nFiles, position, mean, zeros, meanError);
-  TGraphErrors* g1oldRes = new TGraphErrors(4, serialPos, oldSerialMean, zeros, oldSerialMeanError);
-  TGraphErrors* g1newRes = new TGraphErrors(4, serialPos, newSerialMean, zeros, newSerialMeanError);
+  //TGraphErrors* g1oldRes = new TGraphErrors(4, serialPos, oldSerialMean, zeros, oldSerialMeanError);
+  //TGraphErrors* g1newRes = new TGraphErrors(4, serialPos, newSerialMean, zeros, newSerialMeanError);
   TF1* zeroLine = new TF1("zeroLine", "0.", 0., 300.);
   zeroLine->SetLineStyle(4);
-  g1Res->SetTitle("");
-  g1Res->GetXaxis()->SetLabelSize(20);
-  g1Res->GetYaxis()->SetLabelSize(20);
+  g1Res->SetTitle("Residual plot (fit on mean values)");
+  g1Res->GetXaxis()->SetTitle("distance to SiPM [cm]");
+  g1Res->GetXaxis()->SetTitleOffset(1.0);
+  g1Res->GetXaxis()->SetTitleSize(35);
+  g1Res->GetXaxis()->SetLabelSize(30);
+  g1Res->GetYaxis()->SetTitleOffset(0.9);
+  g1Res->GetYaxis()->SetTitleSize(35);
+  g1Res->GetYaxis()->SetLabelSize(30);
+  g1Res->GetYaxis()->SetTitle("(y - f(x))  [pixel]");
   g1Res->GetXaxis()->SetLimits(10., 230.);
-  g1Res->GetYaxis()->SetRangeUser(-1.2,1.2);
+  g1Res->GetYaxis()->SetRangeUser(-0.3,0.3);
   g1Res->Draw("ape");
+  /*
   g1oldRes->SetMarkerStyle(22);
   g1oldRes->SetMarkerColor(kBlue);
   g1oldRes->SetMarkerSize(1.5);
@@ -416,18 +433,26 @@ int main(int argc, char** argv) {
   g1newRes->SetMarkerSize(1.5);
   g1newRes->Draw("same p");
   zeroLine->Draw("SAME");
+  */
 
   TCanvas* c4 = new TCanvas("c4", "c4");
   c4->cd();
   TGraphErrors* g2Res = new TGraphErrors(nFiles, position, median, zeros, medianError);
-  TGraphErrors* g2oldRes = new TGraphErrors(4, serialPos, oldSerialMedian, zeros, oldSerialMedianError);
-  TGraphErrors* g2newRes = new TGraphErrors(4, serialPos, newSerialMedian, zeros, newSerialMedianError);
-  g2Res->SetTitle("");
-  g2Res->GetXaxis()->SetLabelSize(20);
-  g2Res->GetYaxis()->SetLabelSize(20);
+  //TGraphErrors* g2oldRes = new TGraphErrors(4, serialPos, oldSerialMedian, zeros, oldSerialMedianError);
+  //TGraphErrors* g2newRes = new TGraphErrors(4, serialPos, newSerialMedian, zeros, newSerialMedianError);
+  g2Res->SetTitle("Residual plot (fit on median values)");
+  g2Res->GetXaxis()->SetTitle("distance to SiPM [cm]");
+  g2Res->GetXaxis()->SetTitleOffset(1.0);
+  g2Res->GetXaxis()->SetTitleSize(35);
+  g2Res->GetXaxis()->SetLabelSize(30);
+  g2Res->GetYaxis()->SetTitleOffset(0.9);
+  g2Res->GetYaxis()->SetTitleSize(35);
+  g2Res->GetYaxis()->SetLabelSize(30);
+  g2Res->GetYaxis()->SetTitle("(y - f(x))  [pixel]");
   g2Res->GetXaxis()->SetLimits(10., 230.);
-  g2Res->GetYaxis()->SetRangeUser(-1.2,1.2);
+  g2Res->GetYaxis()->SetRangeUser(-0.3,0.3);
   g2Res->Draw("ape");
+  /*
   g2oldRes->SetMarkerStyle(22);
   g2oldRes->SetMarkerColor(kBlue);
   g2oldRes->SetMarkerSize(1.5);
@@ -437,6 +462,7 @@ int main(int argc, char** argv) {
   g2newRes->SetMarkerSize(1.5);
   g2newRes->Draw("samep");
   zeroLine->Draw("SAME");
+  */
 
   application.Run();
   return 0;
